@@ -1,18 +1,18 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="A student score analyzer for teachers" />
-    <meta name="author" content="Matthew Thomas" />
-    <title>@ViewBag.Title - SSAT</title>
+    <meta name="description" content="A student score analyzer for teachers"/>
+    <meta name="author" content="Matthew Thomas"/>
+    <title>@(this.ViewBag.Title) - SSAT</title>
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/ej/web/bootstrap-theme/ej.web.all.min.css")
-		@Scripts.Render("~/Scripts/jquery-3.1.1.min.js")
+    @Scripts.Render("~/Scripts/jquery-3.1.1.min.js")
     @Scripts.Render("~/Scripts/jsrender.min.js")
     @Scripts.Render("~/Scripts/ej/ej.web.all.min.js")
-    
-     
+
+
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -23,29 +23,32 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("SSAT", "Index", "Home", null, new { @class = "navbar-brand" })
+                @(this.Html.ActionLink("SSAT", "Index", "Home", null, new
+                                                                          {
+                                                                              @class = "navbar-brand"
+                                                                          }))
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@(this.Html.ActionLink("Home", "Index", "Home"))</li>
+                    <li>@(this.Html.ActionLink("About", "About", "Home"))</li>
+                    <li>@(this.Html.ActionLink("Contact", "Contact", "Home"))</li>
                 </ul>
             </div>
         </div>
     </div>
-   <div class="container body-content">
-         @RenderBody()   	     
-   </div>
-   <footer>  
-      <div class="container body-content">   
-         <hr/>          
-         <p>&copy; @DateTime.Now.Year - Student Score Analyzer for Teachers</p>              
-       </div>        
+    <div class="container body-content">
+        @(this.RenderBody())
+    </div>
+    <footer>
+        <div class="container body-content">
+            <hr/>
+            <p>&copy; @DateTime.Now.Year - Student Score Analyzer for Teachers</p>
+        </div>
     </footer>
-           
-       @Html.EJ().ScriptManager()
+
+    @(this.Html.EJ().ScriptManager())
     @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    @(this.RenderSection("scripts", required: false))
 </body>
 </html>

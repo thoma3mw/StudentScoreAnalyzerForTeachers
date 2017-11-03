@@ -1,10 +1,27 @@
 @{
-    ViewBag.Title = "Home Page";
+    this.ViewBag.Title = "Home Page";
 }
 
 <div class="jumbotron">
-    <h1>Welcome to the Student<br />Score Analyzer for Teachers!</h1>
-    <br />
-    <p class="lead">Click the button below to begin.</p>
-    <p><a href="#" class="btn btn-primary btn-large">Start</a></p>
+    <h1>
+        Welcome to the Student<br/>Score Analyzer for Teachers!
+    </h1>
+    <br/>
+    <p class="lead">Enter the number of students below and then click "Start."</p>
+    <div class="row">
+        <div class="col-xs-6 col-sm-4">
+            @(this.Html.EJ().NumericTextbox("numberOfStudents").Value("1").Width("25%").MinValue(1))
+        </div>
+    </div>
+    <br/>
+    <p>
+        <a href="@(this.Url.Action("ScoreInput", "Analyzer"))" onclick="getNumberOfStudents()" class="btn btn-primary btn-large">Start</a>
+    </p>
 </div>
+
+<script type="text/javascript">
+    function getNumberOfStudents() {
+        var numStudents = parseInt($("#numberOfStudents").val());
+        alert("You selected $" + numStudents.toString() + " students.");
+    }
+</script>

@@ -1,37 +1,51 @@
-#region Copyright Syncfusion Inc. 2001-2017.
-// Copyright Syncfusion Inc. 2001-2017. All rights reserved.
-// Use of this code is subject to the terms of our license.
-// A copy of the current license can be obtained at any time by e-mailing
-// licensing@syncfusion.com. Any infringement will be prosecuted under
-// applicable laws. 
-#endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="HomeController.cs" company="Does Not Apply">
+// Copyright (c) Matthew Thomas. All rights reserved.
+// </copyright>
+// <summary>
+//   HomeController.cs
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace StudentScoreAnalyzerForTeachers.Controllers
 {
+    using System.Web.Mvc;
+
+    /// <summary>
+    /// Class HomeController
+    /// </summary>
+    /// <seealso cref="System.Web.Mvc.Controller" />
     public class HomeController : Controller
     {
+        /// <summary>
+        /// Indexes this instance.
+        /// </summary>
+        /// <returns>View</returns>
         public ActionResult Index()
         {
-            return View();
+            return this.View();
         }
 
+        /// <summary>
+        /// Abouts this instance.
+        /// </summary>
+        /// <returns>View</returns>
         public ActionResult About()
         {
-            ViewBag.Message = string.Empty;
+            this.ViewBag.Message = string.Empty;
 
-            return View();
+            return this.View();
         }
 
+        /// <summary>
+        /// Contacts this instance.
+        /// </summary>
+        /// <returns>View</returns>
         public ActionResult Contact()
         {
-            ViewBag.Message = string.Empty;
+            this.ViewBag.Message = string.Empty;
 
-            return View();
+            return this.View();
         }
     }
 }
