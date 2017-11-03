@@ -9,8 +9,11 @@
     <br/>
     <p class="lead">Enter the number of students below and then click "Start."</p>
     <div class="row">
-        <div class="col-xs-6 col-sm-4">
-            @(this.Html.EJ().NumericTextbox("numberOfStudents").Value("1").Width("25%").MinValue(1))
+        <div class="col-md-1">
+            @(this.Html.EJ().NumericTextbox("numberOfStudents").Value("1").Width("55px").MinValue(1).ShowSpinButton(false))
+        </div>
+        <div class="col-md-1">
+            @(this.Html.EJ().Button("startBtn").Text("Start").Width("55px").Type(ButtonType.Submit).ClientSideEvents(s => s.Click("getNumberOfStudents")))
         </div>
     </div>
     <br/>
@@ -22,6 +25,7 @@
 <script type="text/javascript">
     function getNumberOfStudents() {
         var numStudents = parseInt($("#numberOfStudents").val());
-        alert("You selected $" + numStudents.toString() + " students.");
+        alert("You selected " + numStudents.toString() + " students.");
+        location.replace(document.location.href + "/ScoreInput/");
     }
 </script>
