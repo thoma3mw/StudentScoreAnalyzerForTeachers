@@ -11,6 +11,8 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
 {
     using System.Web.Mvc;
 
+    using StudentScoreAnalyzerForTeachers.Models;
+
     /// <summary>
     /// Class HomeController
     /// </summary>
@@ -23,7 +25,24 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         /// <returns>View</returns>
         public ActionResult Index()
         {
-            return this.View();
+            return this.View(new NumberOfStudentsModel());
+        }
+
+        /// <summary>
+        /// Indexes the specified number of students model.
+        /// </summary>
+        /// <param name="numberOfStudentsModel">The number of students model.</param>
+        /// <returns>Action</returns>
+        [HttpPost]
+        public ActionResult Index(NumberOfStudentsModel numberOfStudentsModel)
+        {
+            return this.RedirectToAction(
+                "ScoreInput",
+                "Home",
+                new
+                    {
+                        numberOfStudents = numberOfStudentsModel.NumberOfStudents
+                    });
         }
 
         /// <summary>
@@ -45,6 +64,19 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         {
             this.ViewBag.Message = string.Empty;
 
+            return this.View();
+        }
+
+        /// <summary>
+        /// Scores the input.
+        /// </summary>
+        /// <param name="numberOfStudents">The number of students.</param>
+        /// <returns>
+        /// View
+        /// </returns>
+        public ActionResult ScoreInput(int numberOfStudents)
+        {
+            this.ViewBag.NumberOfStudents = numberOfStudents;
             return this.View();
         }
     }

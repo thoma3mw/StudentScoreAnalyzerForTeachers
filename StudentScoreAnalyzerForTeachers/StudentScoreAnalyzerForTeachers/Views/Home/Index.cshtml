@@ -1,3 +1,5 @@
+@model StudentScoreAnalyzerForTeachers.Models.NumberOfStudentsModel
+
 @{
     this.ViewBag.Title = "Home Page";
 }
@@ -8,24 +10,16 @@
     </h1>
     <br/>
     <p class="lead">Enter the number of students below and then click "Start."</p>
+    @{ this.Html.BeginForm(); }
     <div class="row">
         <div class="col-md-1">
-            @(this.Html.EJ().NumericTextbox("numberOfStudents").Value("1").Width("55px").MinValue(1).ShowSpinButton(false))
+            @(this.Html.EJ().NumericTextBoxFor(m => m.NumberOfStudents).Value("1").Width("70px").MinValue(1))
         </div>
         <div class="col-md-1">
-            @(this.Html.EJ().Button("startBtn").Text("Start").Width("55px").Type(ButtonType.Submit).ClientSideEvents(s => s.Click("getNumberOfStudents")))
+            @(this.Html.EJ().Button("startButton").Text("Start").Width("55px").Type(ButtonType.Submit))
         </div>
     </div>
-    <br/>
-    <p>
-        <a href="@(this.Url.Action("ScoreInput", "Analyzer"))" onclick="getNumberOfStudents()" class="btn btn-primary btn-large">Start</a>
-    </p>
-</div>
-
-<script type="text/javascript">
-    function getNumberOfStudents() {
-        var numStudents = parseInt($("#numberOfStudents").val());
-        alert("You selected " + numStudents.toString() + " students.");
-        location.replace(document.location.href + "/ScoreInput/");
+    @{
+        this.Html.EndForm();
     }
-</script>
+</div>
