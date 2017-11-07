@@ -1,6 +1,65 @@
-﻿@{
+﻿@using StudentScoreAnalyzerForTeachers.Models
+@using Syncfusion.JavaScript.Models
+@{
     this.ViewBag.Title = "Score Input";
 }
 
 <h2>Input the student scores in the table below.</h2>
-<h3>You have indicated there are @(this.ViewBag.NumberOfStudents) students.</h3>
+<h3>
+    To edit a student's score, click on the cell containing the score.
+    <br/>
+    Hit 'Enter' to advance to the next row.
+    <br/>
+    Don't forget to save your changes in the grid.
+    <br/>
+    When you are finished, click 'Submit.'
+</h3>
+
+@{ this.Html.BeginForm(); }
+@(this.Html.EJ()
+      .Grid<StudentScoreModel>("ScoreList")
+      .Datasource(datasource => datasource.Json((IEnumerable<StudentScoreModel>)this.Session["StudentScoreModels"]).BatchURL("/Home/BatchUpdate").Adaptor(AdaptorType.RemoteSaveAdaptor))
+      .EditSettings(edit =>
+          {
+              edit.AllowEditing()
+                  .AllowEditOnDblClick()
+                  .EditMode(EditMode.Batch)
+                  .ShowConfirmDialog(false);
+          })
+      .ToolbarSettings(toolbar =>
+          {
+              toolbar.ShowToolbar()
+                  .ToolbarItems(items =>
+                      {
+                          items.AddTool(ToolBarItems.Update);
+                          items.AddTool(ToolBarItems.Cancel);
+                      });
+          })
+      .Columns(col =>
+          {
+              col.Field("StudentNumber")
+                  .HeaderText("Student Number")
+                  .IsPrimaryKey(true)
+                  .TextAlign(TextAlign.Left)
+                  .Add();
+              col.Field("StudentScore")
+                  .HeaderText("Score")
+                  .EditType(EditingType.Numeric)
+                  .NumericEditOptions(new EditorProperties
+                                          {
+                                              DecimalPlaces = 2
+                                          })
+                  .TextAlign(TextAlign.Left)
+                  .Add();
+          }))
+<br/>
+<div style="float: right">
+    @(this.Html.EJ()
+          .Button("submitButton")
+          .Text("Submit")
+          .Size(ButtonSize.Small)
+          .Type(ButtonType.Submit))
+</div>
+@{
+    this.Html.EndForm();
+}

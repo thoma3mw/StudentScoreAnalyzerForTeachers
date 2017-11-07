@@ -13,10 +13,18 @@
     @{ this.Html.BeginForm(); }
     <div class="row">
         <div class="col-md-1">
-            @(this.Html.EJ().NumericTextBoxFor(m => m.NumberOfStudents).Value("1").Width("70px").MinValue(1))
+            @(this.Html.EJ()
+                  .NumericTextBoxFor(m => m.NumberOfStudents)
+                  .Value("1")
+                  .Width("70px")
+                  .MinValue(1))
         </div>
         <div class="col-md-1">
-            @(this.Html.EJ().Button("startButton").Text("Start").Width("55px").Type(ButtonType.Submit))
+            @(this.Html.EJ()
+                  .Button("startButton")
+                  .Text("Start")
+                  .Width("55px")
+                  .Type(ButtonType.Submit))
         </div>
     </div>
     @{
