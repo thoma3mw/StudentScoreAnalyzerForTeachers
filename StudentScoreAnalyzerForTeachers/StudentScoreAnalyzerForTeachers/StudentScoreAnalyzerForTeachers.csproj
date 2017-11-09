@@ -181,6 +181,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\NumberOfStudentsModel.cs" />
+    <Compile Include="Models\SortingModel.cs" />
     <Compile Include="Models\StudentScoreModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

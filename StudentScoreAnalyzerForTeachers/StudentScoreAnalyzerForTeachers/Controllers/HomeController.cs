@@ -88,7 +88,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         {
             this.InitializeStudentScoreModels(numberOfStudents);
 
-            return this.View();
+            return this.View(new SortingModel());
         }
 
         /// <summary>
@@ -99,18 +99,24 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         /// <param name="changed">The changed.</param>
         /// <param name="deleted">The deleted.</param>
         /// <param name="key">The key.</param>
-        /// <returns>Results View</returns>
+        /// <returns>
+        /// Results View
+        /// </returns>
         public ActionResult BatchUpdate(string action, List<StudentScoreModel> added, List<StudentScoreModel> changed, List<StudentScoreModel> deleted, int? key)
         {
-            var studentNumbersChanged = changed.Select(c => c.StudentNumber).ToList();
-            var studentsChanged = changed.ToDictionary(x => x.StudentNumber, x => x.StudentScore);
-            var models = (IEnumerable<StudentScoreModel>)this.Session["StudentScoreModels"];
-
-            foreach (var model in models)
+            if (changed != null)
             {
-                if (studentNumbersChanged.Contains(model.StudentNumber))
+                var studentNumbersChanged = changed.Select(c => c.StudentNumber)
+                    .ToList();
+                var studentsChanged = changed.ToDictionary(x => x.StudentNumber, x => x.StudentScore);
+                var models = (List<StudentScoreModel>)this.Session["StudentScoreModels"];
+
+                foreach (var model in models)
                 {
-                    model.StudentScore = studentsChanged[model.StudentNumber];
+                    if (studentNumbersChanged.Contains(model.StudentNumber))
+                    {
+                        model.StudentScore = studentsChanged[model.StudentNumber];
+                    }
                 }
             }
 
@@ -120,21 +126,33 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         /// <summary>
         /// Scores the input.
         /// </summary>
-        /// <returns>Action</returns>
+        /// <param name="sortingModel">The sorting model.</param>
+        /// <returns>
+        /// Action
+        /// </returns>
         [HttpPost]
-        public ActionResult ScoreInput()
+        public ActionResult ScoreInput(SortingModel sortingModel)
         {
-            return this.RedirectToAction("Results");
+            return this.RedirectToAction(
+                "Results",
+                "Home",
+                new
+                    {
+                        sortDirection = sortingModel.SortingDirection
+                    });
         }
 
         /// <summary>
         /// Results the specified scores models.
         /// </summary>
+        /// <param name="sortDirection">The sort direction.</param>
         /// <returns>
         /// View
         /// </returns>
-        public ActionResult Results()
+        public ActionResult Results(string sortDirection)
         {
+            this.SortScores(sortDirection);
+
             return this.View();
         }
 
@@ -156,6 +174,18 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
             }
 
             this.Session["StudentScoreModels"] = data;
+        }
+
+        /// <summary>
+        /// Sorts the scores.
+        /// </summary>
+        /// <param name="sortDirection">The sort direction.</param>
+        private void SortScores(string sortDirection)
+        {
+            var data = (List<StudentScoreModel>)this.Session["StudentScoreModels"];
+            IEnumerable<StudentScoreModel> sortedData = sortDirection.Equals("ascending") ? data.OrderBy(x => x.StudentScore) : data.OrderByDescending(x => x.StudentScore);
+
+            this.Session["StudentScoreModels"] = sortedData.ToList();
         }
     }
 }

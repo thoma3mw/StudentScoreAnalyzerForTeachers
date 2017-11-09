@@ -8,23 +8,84 @@
 
 @(this.Html.EJ()
       .Grid<StudentScoreModel>("ScoreList")
-      .Datasource((IEnumerable<StudentScoreModel>)this.Session["StudentScoreModels"])
+      .Datasource((List<StudentScoreModel>)this.Session["StudentScoreModels"])
+      .ToolbarSettings(toolbar => toolbar.ShowToolbar()
+                                      .ToolbarItems(items =>
+                                          {
+                                              items.AddTool(ToolBarItems.PrintGrid);
+                                          }))
       .Columns(col =>
-      {
-          col.Field("StudentNumber")
-              .HeaderText("Student Number")
-              .IsPrimaryKey(true)
-              .TextAlign(TextAlign.Left)
-              .Width("25%")
-              .Add();
-          col.Field("StudentScore")
-              .HeaderText("Score")
-              .EditType(EditingType.Numeric)
-              .NumericEditOptions(new EditorProperties
-              {
-                  DecimalPlaces = 2
-              })
-              .TextAlign(TextAlign.Left)
-              .Width("25%")
-              .Add();
-      }))
+          {
+              col.Field("StudentNumber")
+                  .HeaderText("Student Number")
+                  .IsPrimaryKey(true)
+                  .TextAlign(TextAlign.Left)
+                  .Add();
+              col.Field("StudentScore")
+                  .HeaderText("Score")
+                  .EditType(EditingType.Numeric)
+                  .NumericEditOptions(new EditorProperties
+                                          {
+                                              DecimalPlaces = 2
+                                          })
+                  .TextAlign(TextAlign.Left)
+                  .Add();
+          }))
+<br/>
+<div style="float: right">
+    @(this.Html.EJ()
+          .Button("groupButton")
+          .Text("Create Groups")
+          .Size(ButtonSize.Normal)
+          .Type(ButtonType.Submit)
+          .ClientSideEvents(e => e.Click("openDialog")))
+</div>
+
+@{
+    this.Html.EJ()
+        .Dialog("groupDialog")
+        .Title("Group Creation")
+        .ContentTemplate(@<div>
+                             <p>How many groups would you like to create?</p>
+                             @( this.Html.EJ()
+                                    .NumericTextbox("numberOfGroups")
+                                    .Value("1")
+                                    .Width("70px")
+                                    .MinValue(1))
+                         </div>)
+        .ShowFooter(true)
+        .FooterTemplateId("sample")
+        .ShowOnInit(false)
+        .EnableResize(false)
+        .EnableModal(true)
+        .Render();
+}
+
+<script>
+    function openDialog() {
+        $("#groupDialog").ejDialog("open");
+    }
+
+    function closeDialog() {
+        $("#groupDialog").ejDialog("close");
+    }
+</script>
+
+<script id="sample" type="text/x-jsrender">
+    <div class="footerspan" style="float:right; margin-top:5px; margin-right:5px">
+        @(this.Html.EJ()
+              .Button("okButton")
+              .Size(ButtonSize.Mini)
+              .Height("30")
+              .Width("70")
+              .Text("OK"))
+
+        @(this.Html.EJ()
+              .Button("cancelButton")
+              .Size(ButtonSize.Mini)
+              .Height("30")
+              .Width("70")
+              .Text("Cancel")
+              .ClientSideEvents(e => e.Click("closeDialog")))
+    </div>
+</script>
