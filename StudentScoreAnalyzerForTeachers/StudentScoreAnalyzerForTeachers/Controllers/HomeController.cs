@@ -9,6 +9,7 @@
 
 namespace StudentScoreAnalyzerForTeachers.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
@@ -29,7 +30,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         /// </returns>
         public ActionResult Index()
         {
-            return this.View(new NumberOfStudentsModel());
+            return this.View(new NumberModel());
         }
 
         /// <summary>
@@ -40,14 +41,14 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         /// Action
         /// </returns>
         [HttpPost]
-        public ActionResult Index(NumberOfStudentsModel numberOfStudentsModel)
+        public ActionResult Index(NumberModel numberOfStudentsModel)
         {
             return this.RedirectToAction(
                 "ScoreInput",
                 "Home",
                 new
                     {
-                        numberOfStudents = numberOfStudentsModel.NumberOfStudents
+                        numberOfStudents = numberOfStudentsModel.Number
                     });
         }
 
@@ -152,6 +153,39 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         public ActionResult Results(string sortDirection)
         {
             this.SortScores(sortDirection);
+            this.ViewBag.SortDirection = sortDirection;
+
+            return this.View(new NumberModel());
+        }
+
+        /// <summary>
+        /// Results the specified number of groups model.
+        /// </summary>
+        /// <param name="numberOfGroupsModel">The number of groups model.</param>
+        /// <returns>Action</returns>
+        [HttpPost]
+        public ActionResult Results(NumberModel numberOfGroupsModel)
+        {
+            return this.RedirectToAction(
+                "Groups",
+                "Home",
+                new
+                    {
+                        numberOfGroups = numberOfGroupsModel.Number
+                    });
+        }
+
+        /// <summary>
+        /// Groups this instance.
+        /// </summary>
+        /// <param name="numberOfGroups">The number of groups.</param>
+        /// <returns>
+        /// View
+        /// </returns>
+        public ActionResult Groups(int numberOfGroups)
+        {
+            this.CreateGroups(numberOfGroups);
+            this.Session["NumberOfGroups"] = numberOfGroups;
 
             return this.View();
         }
@@ -186,6 +220,47 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
             IEnumerable<StudentScoreModel> sortedData = sortDirection.Equals("ascending") ? data.OrderBy(x => x.StudentScore) : data.OrderByDescending(x => x.StudentScore);
 
             this.Session["StudentScoreModels"] = sortedData.ToList();
+        }
+
+        /// <summary>
+        /// Creates the groups.
+        /// </summary>
+        /// <param name="numberOfGroups">The number of groups.</param>
+        private void CreateGroups(int numberOfGroups)
+        {
+            var data = (List<StudentScoreModel>)this.Session["StudentScoreModels"];
+            var numberOfStudents = data.Count;
+            var studentsPerGroup = (decimal)numberOfStudents / numberOfGroups;
+            var roundedStudentsPerGroup = (int)Math.Round(studentsPerGroup, 0);
+            var studentsLeft = numberOfStudents - (numberOfGroups * roundedStudentsPerGroup);
+            var tempData = data.OrderByDescending(x => x.StudentScore)
+                .ToList();
+
+            for (var i = 0; i < numberOfGroups; i++)
+            {
+                var students = roundedStudentsPerGroup;
+
+                if (studentsLeft < 0 && i == numberOfGroups + studentsLeft)
+                {
+                    students--;
+                    studentsLeft++;
+                }
+
+                if (studentsLeft > 0 && i <= studentsLeft)
+                {
+                    students++;
+                    studentsLeft--;
+                }
+
+                var group = tempData.Take(students)
+                    .ToList();
+                foreach (var model in group)
+                {
+                    model.GroupNumber = i + 1;
+                }
+
+                tempData.RemoveRange(0, students);
+            }
         }
     }
 }

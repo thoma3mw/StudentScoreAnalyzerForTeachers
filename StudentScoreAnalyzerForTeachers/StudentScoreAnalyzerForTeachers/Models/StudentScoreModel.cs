@@ -29,5 +29,13 @@ namespace StudentScoreAnalyzerForTeachers.Models
         /// The student score.
         /// </value>
         public decimal StudentScore { get; set; }
+
+        /// <summary>
+        /// Gets or sets the group number.
+        /// </summary>
+        /// <value>
+        /// The group number.
+        /// </value>
+        public int GroupNumber { get; set; }
     }
 }

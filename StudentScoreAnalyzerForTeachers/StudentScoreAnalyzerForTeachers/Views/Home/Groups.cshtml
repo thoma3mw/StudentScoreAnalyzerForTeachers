@@ -1,0 +1,56 @@
+﻿@using StudentScoreAnalyzerForTeachers.Models
+@{
+    this.ViewBag.Title = "Groups";
+}
+
+<h2>Listed below are your @(this.Session["NumberOfGroups"]) groups.</h2>
+
+<div style="float: right">
+    @(this.Html.EJ()
+          .Button("exportButton")
+          .Text("Export")
+          .Size(ButtonSize.Small))
+</div>
+<br /><br />
+
+@(this.Html.EJ()
+      .Grid<StudentScoreModel>("ScoreList")
+      .Datasource((List<StudentScoreModel>)this.Session["StudentScoreModels"])
+      .ToolbarSettings(toolbar => toolbar.ShowToolbar()
+                                      .ToolbarItems(items =>
+                                          {
+                                              items.AddTool(ToolBarItems.PrintGrid);
+                                          }))
+      .AllowSorting()
+      .SortSettings(s => s.SortedColumns(col =>
+          {
+              col.Field("GroupNumber")
+                  .Direction(SortOrder.Ascending)
+                  .Add();
+              col.Field("StudentScore")
+                  .Direction(SortOrder.Descending)
+                  .Add();
+          }))
+      .AllowGrouping()
+      .GroupSettings(g =>
+          {
+              g.GroupedColumns(col => col.Add("GroupNumber"));
+              g.ShowGroupedColumn(false);
+              g.ShowDropArea(false);
+          })
+      .Columns(col =>
+          {
+              col.Field("StudentNumber")
+                  .HeaderText("Student Number")
+                  .IsPrimaryKey(true)
+                  .TextAlign(TextAlign.Left)
+                  .Add();
+              col.Field("StudentScore")
+                  .HeaderText("Score")
+                  .TextAlign(TextAlign.Left)
+                  .Add();
+              col.Field("GroupNumber")
+                  .HeaderText("Group")
+                  .TextAlign(TextAlign.Left)
+                  .Add();
+          }))

@@ -16,69 +16,73 @@
     When you are finished, click 'Submit.'
 </h4>
 
-@{ this.Html.BeginForm(); }
-@(this.Html.EJ()
-      .Grid<StudentScoreModel>("ScoreList")
-      .Datasource(datasource => datasource.Json((List<StudentScoreModel>)this.Session["StudentScoreModels"])
-                                    .BatchURL("/Home/BatchUpdate")
-                                    .Adaptor(AdaptorType.RemoteSaveAdaptor))
-      .EditSettings(edit =>
-          {
-              edit.AllowEditing()
-                  .AllowEditOnDblClick()
-                  .EditMode(EditMode.Batch)
-                  .ShowConfirmDialog(false);
-          })
-      .Columns(col =>
-          {
-              col.Field("StudentNumber")
-                  .HeaderText("Student Number")
-                  .IsPrimaryKey(true)
-                  .TextAlign(TextAlign.Left)
-                  .Add();
-              col.Field("StudentScore")
-                  .HeaderText("Score")
-                  .EditType(EditingType.Numeric)
-                  .NumericEditOptions(new EditorProperties
-                                          {
-                                              DecimalPlaces = 2
-                                          })
-                  .TextAlign(TextAlign.Left)
-                  .Add();
-          }))
-<br/>
-<div style="float: right">
-    <div>
-        <p>
-            Sort scores:
-        </p>
+<div class="row">
+    @{ this.Html.BeginForm(); }
+    <div class="col-md-10">
         @(this.Html.EJ()
-              .RadioButtonFor(m => m.SortingDirection, "ascending")
-              .Name("sortDirectionRadio")
-              .Text("Ascending")
-              .Size(RadioButtonSize.Small)
-              .Checked(true)
-              .Enabled(true))
-        @(this.Html.EJ()
-              .RadioButtonFor(m => m.SortingDirection, "descending")
-              .Name("sortDirectionRadio")
-              .Text("Descending")
-              .Size(RadioButtonSize.Small)
-              .Checked(false)
-              .Enabled(true))
+              .Grid<StudentScoreModel>("ScoreList")
+              .Datasource(datasource => datasource.Json((List<StudentScoreModel>)this.Session["StudentScoreModels"])
+                                            .BatchURL("/Home/BatchUpdate")
+                                            .Adaptor(AdaptorType.RemoteSaveAdaptor))
+              .EditSettings(edit =>
+                  {
+                      edit.AllowEditing()
+                          .AllowEditOnDblClick()
+                          .EditMode(EditMode.Batch)
+                          .ShowConfirmDialog(false);
+                  })
+              .Columns(col =>
+                  {
+                      col.Field("StudentNumber")
+                          .HeaderText("Student Number")
+                          .IsPrimaryKey(true)
+                          .TextAlign(TextAlign.Left)
+                          .Add();
+                      col.Field("StudentScore")
+                          .HeaderText("Score")
+                          .EditType(EditingType.Numeric)
+                          .NumericEditOptions(new EditorProperties
+                                                  {
+                                                      DecimalPlaces = 2
+                                                  })
+                          .TextAlign(TextAlign.Left)
+                          .Add();
+                  }))
     </div>
-    <div>
-        @(this.Html.EJ()
-              .Button("submitButton")
-              .Text("Submit")
-              .Size(ButtonSize.Normal)
-              .Type(ButtonType.Submit)
-              .ClientSideEvents(x => x.Click("SaveRequest")))
+    <br/>
+    <div class="col-md-2" style="float: right">
+        <div>
+            <p>
+                Sort scores:
+            </p>
+            @(this.Html.EJ()
+                  .RadioButtonFor(m => m.SortingDirection, "ascending")
+                  .Name("sortDirectionRadio")
+                  .Text("Ascending")
+                  .Size(RadioButtonSize.Small)
+                  .Checked(true)
+                  .Enabled(true))
+            @(this.Html.EJ()
+                  .RadioButtonFor(m => m.SortingDirection, "descending")
+                  .Name("sortDirectionRadio")
+                  .Text("Descending")
+                  .Size(RadioButtonSize.Small)
+                  .Checked(false)
+                  .Enabled(true))
+        </div>
+        <div>
+            @(this.Html.EJ()
+                  .Button("submitButton")
+                  .Text("Submit")
+                  .Size(ButtonSize.Normal)
+                  .Type(ButtonType.Submit)
+                  .ClientSideEvents(x => x.Click("SaveRequest")))
+        </div>
     </div>
+    @{
+        this.Html.EndForm();
+    }
 </div>
-@{
-    this.Html.EndForm();
-}
 
 <script type="text/javascript">
 
