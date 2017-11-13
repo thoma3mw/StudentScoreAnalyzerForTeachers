@@ -1,25 +1,25 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SortingModel.cs" company="Does Not Apply">
+// <copyright file="HomePageModel.cs" company="Does Not Apply">
 // Copyright (c) Matthew Thomas. All rights reserved.
 // </copyright>
 // <summary>
-//   SortingModel.cs
+//   HomePageModel.cs
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace StudentScoreAnalyzerForTeachers.Models
 {
     /// <summary>
-    /// Class SortingModel
+    /// Class NumberModel
     /// </summary>
-    public class SortingModel
+    public class HomePageModel
     {
         /// <summary>
-        /// Gets or sets the sorting direction.
+        /// Gets or sets the number of students.
         /// </summary>
         /// <value>
-        /// The sorting direction.
+        /// The number of students.
         /// </value>
-        public string SortingDirection { get; set; }
+        public int NumberOfStudents { get; set; }
     }
 }

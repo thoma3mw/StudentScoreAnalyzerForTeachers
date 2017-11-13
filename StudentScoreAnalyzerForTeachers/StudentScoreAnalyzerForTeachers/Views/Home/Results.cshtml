@@ -1,21 +1,25 @@
 ﻿@using StudentScoreAnalyzerForTeachers.Models
-@using Syncfusion.JavaScript.Models
-@model NumberModel
+@model ResultsModel
 @{
     this.ViewBag.Title = "Results";
 }
 
-<h2>Below are the scores listed in @(this.ViewBag.SortDirection) order.</h2>
+<h2>Score Results</h2>
 
-<div style="float: right">
-    @(this.Html.EJ()
-          .Button("groupButton")
-          .Text("Create Groups")
-          .Size(ButtonSize.Normal)
-          .Type(ButtonType.Submit)
-          .ClientSideEvents(e => e.Click("openDialog")))
+<div colspan="2">
+    <div style="float: left">
+        <h4>Goal: @(this.ViewBag.Goal)</h4>
+    </div>
+    <div style="float: right">
+        @(this.Html.EJ()
+              .Button("groupButton")
+              .Text("Create Groups")
+              .Size(ButtonSize.Normal)
+              .Type(ButtonType.Submit)
+              .ClientSideEvents(e => e.Click("OpenDialog")))
+    </div>
+    <div style="clear: both"></div>
 </div>
-<br/><br/>
 
 @(this.Html.EJ()
       .Grid<StudentScoreModel>("ScoreList")
@@ -25,6 +29,21 @@
                                           {
                                               items.AddTool(ToolBarItems.PrintGrid);
                                           }))
+      .AllowSorting()
+      .SortSettings(s => s.SortedColumns(col =>
+          {
+              col.Field("StudentScore")
+                  .Direction(SortOrder.Descending)
+                  .Add();
+          }))
+      .AllowGrouping()
+      .GroupSettings(g =>
+          {
+              g.GroupedColumns(col => col.Add("GoalGroup"));
+              g.ShowGroupedColumn(false);
+              g.ShowDropArea(false);
+              g.CaptionFormat("#template");
+          })
       .Columns(col =>
           {
               col.Field("StudentNumber")
@@ -32,14 +51,15 @@
                   .IsPrimaryKey(true)
                   .TextAlign(TextAlign.Left)
                   .Add();
+              col.Field("StudentName")
+                  .HeaderText("Name")
+                  .TextAlign(TextAlign.Left)
+                  .Add();
               col.Field("StudentScore")
                   .HeaderText("Score")
-                  .EditType(EditingType.Numeric)
-                  .NumericEditOptions(new EditorProperties
-                                          {
-                                              DecimalPlaces = 2
-                                          })
                   .TextAlign(TextAlign.Left)
+                  .Add();
+              col.Field("GoalGroup")
                   .Add();
           }))
 
@@ -51,7 +71,7 @@
                              @{ this.Html.BeginForm(); }
                              <p>How many groups would you like to create?</p>
                              @( this.Html.EJ()
-                                    .NumericTextBoxFor(m => m.Number)
+                                    .NumericTextBoxFor(m => m.NumberOfGroups)
                                     .Value("1")
                                     .Width("70px")
                                     .MinValue(1))
@@ -69,7 +89,8 @@
                                         .Height("30")
                                         .Width("70")
                                         .Text("Cancel")
-                                        .ClientSideEvents(e => e.Click("closeDialog")))
+                                        .Type(ButtonType.Button)
+                                        .ClientSideEvents(e => e.Click("CloseDialog")))
                              </div>
                              @{
                                  this.Html.EndForm();
@@ -82,11 +103,15 @@
 }
 
 <script>
-    function openDialog() {
+    function OpenDialog() {
         $("#groupDialog").ejDialog("open");
     }
 
-    function closeDialog() {
+    function CloseDialog() {
         $("#groupDialog").ejDialog("close");
     }
 </script>
+
+<script id="template" type="text/x-jsrender">
+                {{:key}}
+     </script>

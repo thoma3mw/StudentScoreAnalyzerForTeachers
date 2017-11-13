@@ -1,32 +1,32 @@
 ﻿@using StudentScoreAnalyzerForTeachers.Models
+@using Syncfusion.JavaScript.Models
 @{
     this.ViewBag.Title = "Groups";
 }
 
 <h2>Listed below are your @(this.Session["NumberOfGroups"]) groups.</h2>
-
-<div style="float: right">
-    @(this.Html.EJ()
-          .Button("exportButton")
-          .Text("Export")
-          .Size(ButtonSize.Small))
-</div>
-<br /><br />
+<br/>
 
 @(this.Html.EJ()
       .Grid<StudentScoreModel>("ScoreList")
-      .Datasource((List<StudentScoreModel>)this.Session["StudentScoreModels"])
+      .Datasource(datasource => datasource.Json((List<StudentScoreModel>)this.Session["StudentScoreModels"])
+                                    .UpdateURL("/Home/Update")
+                                    .Adaptor(AdaptorType.RemoteSaveAdaptor))
       .ToolbarSettings(toolbar => toolbar.ShowToolbar()
                                       .ToolbarItems(items =>
                                           {
                                               items.AddTool(ToolBarItems.PrintGrid);
                                           }))
+      .EditSettings(edit =>
+          {
+              edit.AllowEditing()
+                  .AllowEditOnDblClick()
+                  .EditMode(EditMode.Normal)
+                  .ShowConfirmDialog(false);
+          })
       .AllowSorting()
       .SortSettings(s => s.SortedColumns(col =>
           {
-              col.Field("GroupNumber")
-                  .Direction(SortOrder.Ascending)
-                  .Add();
               col.Field("StudentScore")
                   .Direction(SortOrder.Descending)
                   .Add();
@@ -35,8 +35,8 @@
       .GroupSettings(g =>
           {
               g.GroupedColumns(col => col.Add("GroupNumber"));
-              g.ShowGroupedColumn(false);
               g.ShowDropArea(false);
+              g.CaptionFormat("#template");
           })
       .Columns(col =>
           {
@@ -45,12 +45,29 @@
                   .IsPrimaryKey(true)
                   .TextAlign(TextAlign.Left)
                   .Add();
+              col.Field("StudentName")
+                  .HeaderText("Name")
+                  .TextAlign(TextAlign.Left)
+                  .AllowEditing(false)
+                  .Add();
               col.Field("StudentScore")
                   .HeaderText("Score")
                   .TextAlign(TextAlign.Left)
+                  .AllowEditing(false)
+                  .Visible(false)
                   .Add();
               col.Field("GroupNumber")
                   .HeaderText("Group")
+                  .EditType(EditingType.Numeric)
+                  .NumericEditOptions(new EditorProperties
+                                          {
+                                              DecimalPlaces = 0,
+                                              ShowSpinButton = false
+                                          })
                   .TextAlign(TextAlign.Left)
                   .Add();
           }))
+
+<script id="template" type="text/x-jsrender">
+    Group {{:key}}
+</script>

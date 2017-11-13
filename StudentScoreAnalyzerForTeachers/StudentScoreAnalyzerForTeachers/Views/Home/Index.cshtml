@@ -1,4 +1,4 @@
-@model StudentScoreAnalyzerForTeachers.Models.NumberModel
+@model StudentScoreAnalyzerForTeachers.Models.HomePageModel
 
 @{
     this.ViewBag.Title = "Home Page";
@@ -14,10 +14,11 @@
     <div class="row">
         <div class="col-md-1">
             @(this.Html.EJ()
-                  .NumericTextBoxFor(m => m.Number)
+                  .NumericTextBoxFor(m => m.NumberOfStudents)
                   .Value("1")
-                  .Width("70px")
-                  .MinValue(1))
+                  .Width("55px")
+                  .MinValue(1)
+                  .ShowSpinButton(false))
         </div>
         <div class="col-md-1">
             @(this.Html.EJ()

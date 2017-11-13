@@ -23,36 +23,6 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
     public class HomeController : Controller
     {
         /// <summary>
-        /// Indexes this instance.
-        /// </summary>
-        /// <returns>
-        /// View
-        /// </returns>
-        public ActionResult Index()
-        {
-            return this.View(new NumberModel());
-        }
-
-        /// <summary>
-        /// Indexes the specified number of students model.
-        /// </summary>
-        /// <param name="numberOfStudentsModel">The number of students model.</param>
-        /// <returns>
-        /// Action
-        /// </returns>
-        [HttpPost]
-        public ActionResult Index(NumberModel numberOfStudentsModel)
-        {
-            return this.RedirectToAction(
-                "ScoreInput",
-                "Home",
-                new
-                    {
-                        numberOfStudents = numberOfStudentsModel.Number
-                    });
-        }
-
-        /// <summary>
         /// Abouts this instance.
         /// </summary>
         /// <returns>
@@ -79,6 +49,36 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         }
 
         /// <summary>
+        /// Indexes this instance.
+        /// </summary>
+        /// <returns>
+        /// View
+        /// </returns>
+        public ActionResult Index()
+        {
+            return this.View(new HomePageModel());
+        }
+
+        /// <summary>
+        /// Indexes the specified number of students model.
+        /// </summary>
+        /// <param name="numberOfStudentsModel">The number of students model.</param>
+        /// <returns>
+        /// Action
+        /// </returns>
+        [HttpPost]
+        public ActionResult Index(HomePageModel numberOfStudentsModel)
+        {
+            return this.RedirectToAction(
+                "ScoreInput",
+                "Home",
+                new
+                    {
+                        numberOfStudents = numberOfStudentsModel.NumberOfStudents
+                    });
+        }
+
+        /// <summary>
         /// Scores the input.
         /// </summary>
         /// <param name="numberOfStudents">The number of students.</param>
@@ -89,7 +89,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         {
             this.InitializeStudentScoreModels(numberOfStudents);
 
-            return this.View(new SortingModel());
+            return this.View(new ScoreInputModel());
         }
 
         /// <summary>
@@ -109,14 +109,15 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
             {
                 var studentNumbersChanged = changed.Select(c => c.StudentNumber)
                     .ToList();
-                var studentsChanged = changed.ToDictionary(x => x.StudentNumber, x => x.StudentScore);
                 var models = (List<StudentScoreModel>)this.Session["StudentScoreModels"];
 
                 foreach (var model in models)
                 {
                     if (studentNumbersChanged.Contains(model.StudentNumber))
                     {
-                        model.StudentScore = studentsChanged[model.StudentNumber];
+                        var changedModel = changed.First(x => x.StudentNumber.Equals(model.StudentNumber));
+                        model.StudentName = changedModel.StudentName;
+                        model.StudentScore = changedModel.StudentScore;
                     }
                 }
             }
@@ -132,46 +133,48 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         /// Action
         /// </returns>
         [HttpPost]
-        public ActionResult ScoreInput(SortingModel sortingModel)
+        public ActionResult ScoreInput(ScoreInputModel sortingModel)
         {
             return this.RedirectToAction(
                 "Results",
                 "Home",
                 new
                     {
-                        sortDirection = sortingModel.SortingDirection
+                        scoreGoal = sortingModel.ScoreGoal
                     });
         }
 
         /// <summary>
         /// Results the specified scores models.
         /// </summary>
-        /// <param name="sortDirection">The sort direction.</param>
+        /// <param name="scoreGoal">The score goal.</param>
         /// <returns>
         /// View
         /// </returns>
-        public ActionResult Results(string sortDirection)
+        public ActionResult Results(decimal scoreGoal)
         {
-            this.SortScores(sortDirection);
-            this.ViewBag.SortDirection = sortDirection;
+            this.GroupBasedOnGoal(scoreGoal);
+            this.ViewBag.Goal = scoreGoal;
 
-            return this.View(new NumberModel());
+            return this.View(new ResultsModel());
         }
 
         /// <summary>
         /// Results the specified number of groups model.
         /// </summary>
-        /// <param name="numberOfGroupsModel">The number of groups model.</param>
-        /// <returns>Action</returns>
+        /// <param name="resultsModel">The results model.</param>
+        /// <returns>
+        /// Action
+        /// </returns>
         [HttpPost]
-        public ActionResult Results(NumberModel numberOfGroupsModel)
+        public ActionResult Results(ResultsModel resultsModel)
         {
             return this.RedirectToAction(
                 "Groups",
                 "Home",
                 new
                     {
-                        numberOfGroups = numberOfGroupsModel.Number
+                        numberOfGroups = resultsModel.NumberOfGroups
                     });
         }
 
@@ -188,6 +191,21 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
             this.Session["NumberOfGroups"] = numberOfGroups;
 
             return this.View();
+        }
+
+        /// <summary>
+        /// Updates the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>View</returns>
+        public ActionResult Update(StudentScoreModel value)
+        {
+            var models = (List<StudentScoreModel>)this.Session["StudentScoreModels"];
+
+            var model = models.First(x => x.StudentNumber.Equals(value.StudentNumber));
+            model.GroupNumber = value.GroupNumber;
+
+            return this.Json(this.Session["StudentScoreModels"], JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -211,15 +229,30 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         }
 
         /// <summary>
-        /// Sorts the scores.
+        /// Groups the based on goal.
         /// </summary>
-        /// <param name="sortDirection">The sort direction.</param>
-        private void SortScores(string sortDirection)
+        /// <param name="goal">The goal.</param>
+        private void GroupBasedOnGoal(decimal goal)
         {
+            // -1 mean below goal, 0 means at goal, 1 means above goal
             var data = (List<StudentScoreModel>)this.Session["StudentScoreModels"];
-            IEnumerable<StudentScoreModel> sortedData = sortDirection.Equals("ascending") ? data.OrderBy(x => x.StudentScore) : data.OrderByDescending(x => x.StudentScore);
+            foreach (var model in data)
+            {
+                if (model.StudentScore == goal)
+                {
+                    model.GoalGroup = "At Goal";
+                }
+                else if (model.StudentScore < goal)
+                {
+                    model.GoalGroup = "Below Goal";
+                }
+                else
+                {
+                    model.GoalGroup = "Above Goal";
+                }
+            }
 
-            this.Session["StudentScoreModels"] = sortedData.ToList();
+            this.Session["StudentScoreModels"] = data;
         }
 
         /// <summary>

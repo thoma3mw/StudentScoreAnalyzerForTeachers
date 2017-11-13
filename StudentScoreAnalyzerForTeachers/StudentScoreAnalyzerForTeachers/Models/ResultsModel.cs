@@ -1,25 +1,25 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="NumberModel.cs" company="Does Not Apply">
+// <copyright file="ResultsModel.cs" company="Does Not Apply">
 // Copyright (c) Matthew Thomas. All rights reserved.
 // </copyright>
 // <summary>
-//   NumberModel.cs
+//   ResultsModel.cs
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace StudentScoreAnalyzerForTeachers.Models
 {
     /// <summary>
-    /// Class NumberModel
+    /// Class ResultsModel
     /// </summary>
-    public class NumberModel
+    public class ResultsModel
     {
         /// <summary>
-        /// Gets or sets the number of students.
+        /// Gets or sets the number of groups.
         /// </summary>
         /// <value>
-        /// The number of students.
+        /// The number of groups.
         /// </value>
-        public int Number { get; set; }
+        public int NumberOfGroups { get; set; }
     }
 }

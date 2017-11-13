@@ -1,17 +1,19 @@
 ﻿@using StudentScoreAnalyzerForTeachers.Models
 @using Syncfusion.JavaScript.Models
-@model SortingModel
+@model ScoreInputModel
 @{
     this.ViewBag.Title = "Score Input";
 }
 
-<h2>Input the student scores in the table below.</h2>
+<h2>Input the student names and scores below.</h2>
 <h4>
-    To edit a student's score, click on the cell containing the score.
+    Click on a cell to edit the contents.
     <br/>
-    Hit 'Enter' to advance to the next row.
+    Hit 'Tab' to advance through the grid.
     <br/>
-    Select how you want the scores sorted.
+    Hit 'Enter' when you get to the last cell.
+    <br/>
+    Enter the score goal.
     <br/>
     When you are finished, click 'Submit.'
 </h4>
@@ -38,12 +40,18 @@
                           .IsPrimaryKey(true)
                           .TextAlign(TextAlign.Left)
                           .Add();
+                      col.Field("StudentName")
+                          .HeaderText("Name")
+                          .EditType(EditingType.String)
+                          .TextAlign(TextAlign.Left)
+                          .Add();
                       col.Field("StudentScore")
                           .HeaderText("Score")
                           .EditType(EditingType.Numeric)
                           .NumericEditOptions(new EditorProperties
                                                   {
-                                                      DecimalPlaces = 2
+                                                      DecimalPlaces = 2,
+                                                      ShowSpinButton = false
                                                   })
                           .TextAlign(TextAlign.Left)
                           .Add();
@@ -53,23 +61,17 @@
     <div class="col-md-2" style="float: right">
         <div>
             <p>
-                Sort scores:
+                Goal:
             </p>
             @(this.Html.EJ()
-                  .RadioButtonFor(m => m.SortingDirection, "ascending")
-                  .Name("sortDirectionRadio")
-                  .Text("Ascending")
-                  .Size(RadioButtonSize.Small)
-                  .Checked(true)
-                  .Enabled(true))
-            @(this.Html.EJ()
-                  .RadioButtonFor(m => m.SortingDirection, "descending")
-                  .Name("sortDirectionRadio")
-                  .Text("Descending")
-                  .Size(RadioButtonSize.Small)
-                  .Checked(false)
-                  .Enabled(true))
+                  .NumericTextBoxFor(m => m.ScoreGoal)
+                  .Width("70px")
+                  .WatermarkText("Goal")
+                  .DecimalPlaces(2)
+                  .ShowSpinButton(false)
+                  .MinValue(0))
         </div>
+        <br/>
         <div>
             @(this.Html.EJ()
                   .Button("submitButton")
