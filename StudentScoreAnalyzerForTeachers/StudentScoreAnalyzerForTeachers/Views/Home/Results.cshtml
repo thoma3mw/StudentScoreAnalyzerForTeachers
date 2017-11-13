@@ -1,30 +1,130 @@
 ﻿@using StudentScoreAnalyzerForTeachers.Models
-@using Syncfusion.JavaScript.Models
+@model ResultsModel
 @{
     this.ViewBag.Title = "Results";
 }
 
-<h2>Below are the results.</h2>
+@{ string gridHeaderString = "Goal: " + this.ViewBag.Goal; }
+
+<h2>Score Results</h2>
+
+<div style="float: right">
+    @(this.Html.EJ()
+          .Button("groupButton")
+          .Text("Create Groups")
+          .Size(ButtonSize.Normal)
+          .Type(ButtonType.Submit)
+          .ClientSideEvents(e => e.Click("OpenDialog")))
+</div>
+<br/><br/>
 
 @(this.Html.EJ()
       .Grid<StudentScoreModel>("ScoreList")
-      .Datasource((IEnumerable<StudentScoreModel>)this.Session["StudentScoreModels"])
+      .Datasource((List<StudentScoreModel>)this.Session["StudentScoreModels"])
+      .ToolbarSettings(toolbar => toolbar.ShowToolbar()
+                                      .ToolbarItems(items =>
+                                          {
+                                              items.AddTool(ToolBarItems.PrintGrid);
+                                          }))
+      .AllowSorting()
+      .SortSettings(s => s.SortedColumns(col =>
+          {
+              col.Field("StudentScore")
+                  .Direction(SortOrder.Descending)
+                  .Add();
+          }))
+      .AllowGrouping()
+      .GroupSettings(g =>
+          {
+              g.GroupedColumns(col => col.Add("GoalGroup"));
+              g.ShowGroupedColumn(false);
+              g.ShowDropArea(false);
+              g.CaptionFormat("#template");
+          })
+      .ShowStackedHeader()
+      .StackedHeaderRows(row =>
+          {
+              row.StackedHeaderColumns(column =>
+                  {
+                      column.HeaderText(gridHeaderString)
+                          .Column(col =>
+                              {
+                                  col.Add("StudentNumber");
+                                  col.Add("StudentName");
+                                  col.Add("StudentScore");
+                              })
+                          .Add();
+                  })
+                  .Add();
+          })
       .Columns(col =>
-      {
-          col.Field("StudentNumber")
-              .HeaderText("Student Number")
-              .IsPrimaryKey(true)
-              .TextAlign(TextAlign.Left)
-              .Width("25%")
-              .Add();
-          col.Field("StudentScore")
-              .HeaderText("Score")
-              .EditType(EditingType.Numeric)
-              .NumericEditOptions(new EditorProperties
-              {
-                  DecimalPlaces = 2
-              })
-              .TextAlign(TextAlign.Left)
-              .Width("25%")
-              .Add();
-      }))
+          {
+              col.Field("StudentNumber")
+                  .HeaderText("Student Number")
+                  .IsPrimaryKey(true)
+                  .TextAlign(TextAlign.Left)
+                  .Add();
+              col.Field("StudentName")
+                  .HeaderText("Name")
+                  .TextAlign(TextAlign.Left)
+                  .Add();
+              col.Field("StudentScore")
+                  .HeaderText("Score")
+                  .TextAlign(TextAlign.Left)
+                  .Add();
+              col.Field("GoalGroup")
+                  .Add();
+          }))
+
+@{
+    this.Html.EJ()
+        .Dialog("groupDialog")
+        .Title("Group Creation")
+        .ContentTemplate(@<div>
+                             @{ this.Html.BeginForm(); }
+                             <p>How many groups would you like to create?</p>
+                             @( this.Html.EJ()
+                                    .NumericTextBoxFor(m => m.NumberOfGroups)
+                                    .Value("1")
+                                    .Width("70px")
+                                    .MinValue(1))
+                             <div style="float: right; margin: 5px">
+                                 @( this.Html.EJ()
+                                        .Button("okButton")
+                                        .Size(ButtonSize.Mini)
+                                        .Height("30")
+                                        .Width("70")
+                                        .Text("OK")
+                                        .Type(ButtonType.Submit))
+                                 @( this.Html.EJ()
+                                        .Button("cancelButton")
+                                        .Size(ButtonSize.Mini)
+                                        .Height("30")
+                                        .Width("70")
+                                        .Text("Cancel")
+                                        .Type(ButtonType.Button)
+                                        .ClientSideEvents(e => e.Click("CloseDialog")))
+                             </div>
+                             @{
+                                 this.Html.EndForm();
+                             }
+                         </div>)
+        .ShowOnInit(false)
+        .EnableResize(false)
+        .EnableModal(true)
+        .Render();
+}
+
+<script>
+    function OpenDialog() {
+        $("#groupDialog").ejDialog("open");
+    }
+
+    function CloseDialog() {
+        $("#groupDialog").ejDialog("close");
+    }
+</script>
+
+<script id="template" type="text/x-jsrender">
+                {{:key}} - {{:count}} students
+     </script>

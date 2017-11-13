@@ -1,0 +1,79 @@
+﻿@using StudentScoreAnalyzerForTeachers.Models
+@using Syncfusion.JavaScript.Models
+@{
+    this.ViewBag.Title = "Groups";
+}
+
+<h2>Groups</h2>
+<ul>
+    <li>To change a student's group, double click on their group number, change it, and then hit 'Enter.'</li>
+</ul>
+
+@(this.Html.EJ()
+      .Grid<StudentScoreModel>("ScoreList")
+      .Datasource(datasource => datasource.Json((List<StudentScoreModel>)this.Session["StudentScoreModels"])
+                                    .UpdateURL("/Home/Update")
+                                    .Adaptor(AdaptorType.RemoteSaveAdaptor))
+      .ToolbarSettings(toolbar => toolbar.ShowToolbar()
+                                      .ToolbarItems(items =>
+                                          {
+                                              items.AddTool(ToolBarItems.PrintGrid);
+                                          }))
+      .EditSettings(edit =>
+          {
+              edit.AllowEditing()
+                  .AllowEditOnDblClick()
+                  .EditMode(EditMode.Normal)
+                  .ShowConfirmDialog(false);
+          })
+      .AllowSorting()
+      .SortSettings(s => s.SortedColumns(col =>
+          {
+              col.Field("StudentScore")
+                  .Direction(SortOrder.Descending)
+                  .Add();
+          }))
+      .AllowGrouping()
+      .GroupSettings(g =>
+          {
+              g.GroupedColumns(col => col.Add("GroupNumber"));
+              g.ShowDropArea(false);
+              g.CaptionFormat("#template");
+          })
+      .Columns(col =>
+          {
+              col.Field("StudentNumber")
+                  .HeaderText("Student Number")
+                  .IsPrimaryKey(true)
+                  .TextAlign(TextAlign.Left)
+                  .Add();
+              col.Field("StudentName")
+                  .HeaderText("Name")
+                  .TextAlign(TextAlign.Left)
+                  .AllowEditing(false)
+                  .Add();
+              col.Field("StudentScore")
+                  .HeaderText("Score")
+                  .TextAlign(TextAlign.Left)
+                  .AllowEditing(false)
+                  .Visible(false)
+                  .Add();
+              col.Field("GroupNumber")
+                  .HeaderText("Group")
+                  .EditType(EditingType.Numeric)
+                  .NumericEditOptions(new EditorProperties
+                                          {
+                                              DecimalPlaces = 0,
+                                              ShowSpinButton = false
+                                          })
+                  .TextAlign(TextAlign.Left)
+                  .Add();
+          }))
+
+<script id="template" type="text/x-jsrender">
+    Group {{:key}} - {{:count}} students
+</script>
+
+<style>
+    li { font-size: medium; }
+</style>

@@ -1,65 +1,99 @@
 ﻿@using StudentScoreAnalyzerForTeachers.Models
 @using Syncfusion.JavaScript.Models
+@model ScoreInputModel
 @{
     this.ViewBag.Title = "Score Input";
 }
 
-<h2>Input the student scores in the table below.</h2>
-<h3>
-    To edit a student's score, click on the cell containing the score.
-    <br/>
-    Hit 'Enter' to advance to the next row.
-    <br/>
-    Don't forget to save your changes in the grid.
-    <br/>
-    When you are finished, click 'Submit.'
-</h3>
+<h2>Input the student names and scores below.</h2>
+<ul>
+    <li>Click on a cell to edit the contents.</li>
+    <li>Hit 'Tab' to advance through the grid.</li>
+    <li>Hit 'Enter' when you get to the last cell.</li>
+    <li>Enter the score goal.</li>
+    <li>When you are finished, click 'Submit.'</li>
+</ul>
 
-@{ this.Html.BeginForm(); }
-@(this.Html.EJ()
-      .Grid<StudentScoreModel>("ScoreList")
-      .Datasource(datasource => datasource.Json((IEnumerable<StudentScoreModel>)this.Session["StudentScoreModels"]).BatchURL("/Home/BatchUpdate").Adaptor(AdaptorType.RemoteSaveAdaptor))
-      .EditSettings(edit =>
-          {
-              edit.AllowEditing()
-                  .AllowEditOnDblClick()
-                  .EditMode(EditMode.Batch)
-                  .ShowConfirmDialog(false);
-          })
-      .ToolbarSettings(toolbar =>
-          {
-              toolbar.ShowToolbar()
-                  .ToolbarItems(items =>
-                      {
-                          items.AddTool(ToolBarItems.Update);
-                          items.AddTool(ToolBarItems.Cancel);
-                      });
-          })
-      .Columns(col =>
-          {
-              col.Field("StudentNumber")
-                  .HeaderText("Student Number")
-                  .IsPrimaryKey(true)
-                  .TextAlign(TextAlign.Left)
-                  .Add();
-              col.Field("StudentScore")
-                  .HeaderText("Score")
-                  .EditType(EditingType.Numeric)
-                  .NumericEditOptions(new EditorProperties
-                                          {
-                                              DecimalPlaces = 2
-                                          })
-                  .TextAlign(TextAlign.Left)
-                  .Add();
-          }))
-<br/>
-<div style="float: right">
-    @(this.Html.EJ()
-          .Button("submitButton")
-          .Text("Submit")
-          .Size(ButtonSize.Small)
-          .Type(ButtonType.Submit))
+<div class="row">
+    @{ this.Html.BeginForm(); }
+    <div class="col-md-10">
+        @(this.Html.EJ()
+              .Grid<StudentScoreModel>("ScoreList")
+              .Datasource(datasource => datasource.Json((List<StudentScoreModel>)this.Session["StudentScoreModels"])
+                                            .BatchURL("/Home/BatchUpdate")
+                                            .Adaptor(AdaptorType.RemoteSaveAdaptor))
+              .EditSettings(edit =>
+                  {
+                      edit.AllowEditing()
+                          .AllowEditOnDblClick()
+                          .EditMode(EditMode.Batch)
+                          .ShowConfirmDialog(false);
+                  })
+              .Columns(col =>
+                  {
+                      col.Field("StudentNumber")
+                          .HeaderText("Student Number")
+                          .IsPrimaryKey(true)
+                          .TextAlign(TextAlign.Left)
+                          .Add();
+                      col.Field("StudentName")
+                          .HeaderText("Name")
+                          .EditType(EditingType.String)
+                          .TextAlign(TextAlign.Left)
+                          .Add();
+                      col.Field("StudentScore")
+                          .HeaderText("Score")
+                          .EditType(EditingType.Numeric)
+                          .NumericEditOptions(new EditorProperties
+                                                  {
+                                                      DecimalPlaces = 2,
+                                                      ShowSpinButton = false
+                                                  })
+                          .TextAlign(TextAlign.Left)
+                          .Add();
+                  }))
+    </div>
+    <br/>
+    <div class="col-md-2" style="float: right">
+        <div>
+            <p>
+                Goal:
+            </p>
+            @(this.Html.EJ()
+                  .NumericTextBoxFor(m => m.ScoreGoal)
+                  .Width("70px")
+                  .WatermarkText("Goal")
+                  .DecimalPlaces(2)
+                  .ShowSpinButton(false)
+                  .MinValue(0))
+        </div>
+        <br/>
+        <div>
+            @(this.Html.EJ()
+                  .Button("submitButton")
+                  .Text("Submit")
+                  .Size(ButtonSize.Normal)
+                  .Type(ButtonType.Submit)
+                  .ClientSideEvents(x => x.Click("SaveRequest")))
+        </div>
+    </div>
+    @{
+        this.Html.EndForm();
+    }
 </div>
-@{
-    this.Html.EndForm();
-}
+
+<script type="text/javascript">
+
+    function SaveRequest() {
+
+        var gridObj = $("#ScoreList").ejGrid("instance"); //Get the gridobj from the GridID
+
+        gridObj.batchSave();
+
+    }
+
+</script>
+
+<style>
+    li { font-size: medium; }
+</style>

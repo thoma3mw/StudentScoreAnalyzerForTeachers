@@ -1,8 +1,18 @@
 ﻿@{
-    ViewBag.Title = "About";
+    this.ViewBag.Title = "About";
 }
-<h2>@ViewBag.Title</h2>
-<h3>@ViewBag.Message</h3>
+<h2>@(this.ViewBag.Title)</h2>
+<h3>@(this.ViewBag.Message)</h3>
 
-<p>This web application will take the list of students' scores that is input and sort the scores for you.<br/>
-    You can also create groups of a specific number of students based on the sorted list.</p>
+<ul>
+    <li>This web application will take the number of students input on the home page and create a list for their names and scores.</li>
+    <li>It will ask for a score goal after you finish inputting the names and scores.</li>
+    <li>Once submitted, the application will sort the scores and group them by how they relate to the goal.</li>
+    <li>Groups of a specific number of students can also be created based on the sorted list.</li>
+</ul>
+
+<style>
+    li {
+        font-size: large;
+    }
+</style>

@@ -1,18 +1,18 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="NumberOfStudentsModel.cs" company="Does Not Apply">
+// <copyright file="HomePageModel.cs" company="Does Not Apply">
 // Copyright (c) Matthew Thomas. All rights reserved.
 // </copyright>
 // <summary>
-//   NumberOfStudentsModel.cs
+//   HomePageModel.cs
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace StudentScoreAnalyzerForTeachers.Models
 {
     /// <summary>
-    /// Class NumberOfStudentsModel
+    /// Class NumberModel
     /// </summary>
-    public class NumberOfStudentsModel
+    public class HomePageModel
     {
         /// <summary>
         /// Gets or sets the number of students.
