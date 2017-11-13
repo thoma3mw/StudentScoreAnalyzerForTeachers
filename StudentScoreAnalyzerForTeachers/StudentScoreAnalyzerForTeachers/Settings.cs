@@ -46,7 +46,11 @@ namespace StudentScoreAnalyzerForTeachers
         {
             get
             {
-                int.TryParse(ConfigurationManager.AppSettings[SecretCodeKey], out var secretCode);
+                int secretCode;
+                if (!int.TryParse(ConfigurationManager.AppSettings[SecretCodeKey], out secretCode))
+                {
+                    secretCode = 0;
+                }
 
                 return secretCode;
             }
@@ -62,7 +66,11 @@ namespace StudentScoreAnalyzerForTeachers
         {
             get
             {
-                int.TryParse(ConfigurationManager.AppSettings[SecretNumberOfStudentsKey], out var secretNumberOfStudents);
+                int secretNumberOfStudents;
+                if (!int.TryParse(ConfigurationManager.AppSettings[SecretNumberOfStudentsKey], out secretNumberOfStudents))
+                {
+                    secretNumberOfStudents = 0;
+                }
 
                 return secretNumberOfStudents;
             }
@@ -78,7 +86,11 @@ namespace StudentScoreAnalyzerForTeachers
         {
             get
             {
-                int.TryParse(ConfigurationManager.AppSettings[SecretStudentNumberSkipKey], out var secretStudentNumberSkip);
+                int secretStudentNumberSkip;
+                if (!int.TryParse(ConfigurationManager.AppSettings[SecretStudentNumberSkipKey], out secretStudentNumberSkip))
+                {
+                    secretStudentNumberSkip = 0;
+                }
 
                 return secretStudentNumberSkip;
             }
