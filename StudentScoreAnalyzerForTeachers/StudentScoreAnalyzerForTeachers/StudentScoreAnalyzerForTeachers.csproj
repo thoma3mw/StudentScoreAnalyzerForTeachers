@@ -185,6 +185,7 @@
     <Compile Include="Models\ScoreInputModel.cs" />
     <Compile Include="Models\StudentScoreModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>

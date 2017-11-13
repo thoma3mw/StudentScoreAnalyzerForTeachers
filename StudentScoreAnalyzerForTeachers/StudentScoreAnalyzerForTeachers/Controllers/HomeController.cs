@@ -87,7 +87,14 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         /// </returns>
         public ActionResult ScoreInput(int numberOfStudents)
         {
-            this.InitializeStudentScoreModels(numberOfStudents);
+            if (numberOfStudents == Settings.SecretCode)
+            {
+                this.InitializeScoreModelsForSecretCode();
+            }
+            else
+            {
+                this.InitializeStudentScoreModels(numberOfStudents);
+            }
 
             return this.View(new ScoreInputModel());
         }
@@ -206,6 +213,36 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
             model.GroupNumber = value.GroupNumber;
 
             return this.Json(this.Session["StudentScoreModels"], JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Initializes the score models for secret code.
+        /// </summary>
+        private void InitializeScoreModelsForSecretCode()
+        {
+            var numberOfStudents = Settings.SecretNumberOfStudents;
+            var numberToSkip = Settings.SecretStudentNumberSkip;
+            var studentNames = Settings.SecretStudentNames;
+
+            var data = new List<StudentScoreModel>();
+            for (var i = 0; i < numberOfStudents; i++)
+            {
+                data.Add(
+                    new StudentScoreModel
+                        {
+                            StudentNumber = i + 1,
+                            StudentName = studentNames[i],
+                            StudentScore = decimal.Zero
+                        });
+            }
+
+            if (numberToSkip != 0)
+            {
+                var modelToRemove = data.First(m => m.StudentNumber.Equals(numberToSkip));
+                data.Remove(modelToRemove);
+            }
+
+            this.Session["StudentScoreModels"] = data;
         }
 
         /// <summary>

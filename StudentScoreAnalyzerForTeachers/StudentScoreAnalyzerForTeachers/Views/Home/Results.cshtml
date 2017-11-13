@@ -4,22 +4,19 @@
     this.ViewBag.Title = "Results";
 }
 
+@{ string gridHeaderString = "Goal: " + this.ViewBag.Goal; }
+
 <h2>Score Results</h2>
 
-<div colspan="2">
-    <div style="float: left">
-        <h4>Goal: @(this.ViewBag.Goal)</h4>
-    </div>
-    <div style="float: right">
-        @(this.Html.EJ()
-              .Button("groupButton")
-              .Text("Create Groups")
-              .Size(ButtonSize.Normal)
-              .Type(ButtonType.Submit)
-              .ClientSideEvents(e => e.Click("OpenDialog")))
-    </div>
-    <div style="clear: both"></div>
+<div style="float: right">
+    @(this.Html.EJ()
+          .Button("groupButton")
+          .Text("Create Groups")
+          .Size(ButtonSize.Normal)
+          .Type(ButtonType.Submit)
+          .ClientSideEvents(e => e.Click("OpenDialog")))
 </div>
+<br/><br/>
 
 @(this.Html.EJ()
       .Grid<StudentScoreModel>("ScoreList")
@@ -43,6 +40,22 @@
               g.ShowGroupedColumn(false);
               g.ShowDropArea(false);
               g.CaptionFormat("#template");
+          })
+      .ShowStackedHeader()
+      .StackedHeaderRows(row =>
+          {
+              row.StackedHeaderColumns(column =>
+                  {
+                      column.HeaderText(gridHeaderString)
+                          .Column(col =>
+                              {
+                                  col.Add("StudentNumber");
+                                  col.Add("StudentName");
+                                  col.Add("StudentScore");
+                              })
+                          .Add();
+                  })
+                  .Add();
           })
       .Columns(col =>
           {
@@ -113,5 +126,5 @@
 </script>
 
 <script id="template" type="text/x-jsrender">
-                {{:key}}
+                {{:key}} - {{:count}} students
      </script>

@@ -6,17 +6,13 @@
 }
 
 <h2>Input the student names and scores below.</h2>
-<h4>
-    Click on a cell to edit the contents.
-    <br/>
-    Hit 'Tab' to advance through the grid.
-    <br/>
-    Hit 'Enter' when you get to the last cell.
-    <br/>
-    Enter the score goal.
-    <br/>
-    When you are finished, click 'Submit.'
-</h4>
+<ul>
+    <li>Click on a cell to edit the contents.</li>
+    <li>Hit 'Tab' to advance through the grid.</li>
+    <li>Hit 'Enter' when you get to the last cell.</li>
+    <li>Enter the score goal.</li>
+    <li>When you are finished, click 'Submit.'</li>
+</ul>
 
 <div class="row">
     @{ this.Html.BeginForm(); }
@@ -97,3 +93,7 @@
     }
 
 </script>
+
+<style>
+    li { font-size: medium; }
+</style>

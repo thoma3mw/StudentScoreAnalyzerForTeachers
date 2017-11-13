@@ -4,8 +4,10 @@
     this.ViewBag.Title = "Groups";
 }
 
-<h2>Listed below are your @(this.Session["NumberOfGroups"]) groups.</h2>
-<br/>
+<h2>Groups</h2>
+<ul>
+    <li>To change a student's group, double click on their group number, change it, and then hit 'Enter.'</li>
+</ul>
 
 @(this.Html.EJ()
       .Grid<StudentScoreModel>("ScoreList")
@@ -69,5 +71,9 @@
           }))
 
 <script id="template" type="text/x-jsrender">
-    Group {{:key}}
+    Group {{:key}} - {{:count}} students
 </script>
+
+<style>
+    li { font-size: medium; }
+</style>
