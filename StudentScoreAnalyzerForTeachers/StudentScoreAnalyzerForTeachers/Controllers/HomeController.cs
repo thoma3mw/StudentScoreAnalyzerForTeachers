@@ -23,7 +23,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
     public class HomeController : Controller
     {
         /// <summary>
-        /// Returns the About view
+        /// Abouts this instance.
         /// </summary>
         /// <returns>
         /// View
@@ -36,7 +36,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         }
 
         /// <summary>
-        /// Returns the Contact view
+        /// Contacts this instance.
         /// </summary>
         /// <returns>
         /// View
@@ -49,7 +49,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         }
 
         /// <summary>
-        /// Returns the Home view
+        /// Indexes this instance.
         /// </summary>
         /// <returns>
         /// View
@@ -60,7 +60,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         }
 
         /// <summary>
-        /// Redirects to the ScoreInput view
+        /// Indexes the specified number of students model.
         /// </summary>
         /// <param name="numberOfStudentsModel">The number of students model.</param>
         /// <returns>
@@ -79,7 +79,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         }
 
         /// <summary>
-        /// Returns the ScoreInput view
+        /// Scores the input.
         /// </summary>
         /// <param name="numberOfStudents">The number of students.</param>
         /// <returns>
@@ -100,7 +100,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         }
 
         /// <summary>
-        /// Updates the score models
+        /// Batches the update.
         /// </summary>
         /// <param name="action">The action.</param>
         /// <param name="added">The added.</param>
@@ -133,7 +133,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         }
 
         /// <summary>
-        /// Redirects to the Results view
+        /// Scores the input.
         /// </summary>
         /// <param name="sortingModel">The sorting model.</param>
         /// <returns>
@@ -152,7 +152,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         }
 
         /// <summary>
-        /// Returns the Results view
+        /// Results the specified scores models.
         /// </summary>
         /// <param name="scoreGoal">The score goal.</param>
         /// <returns>
@@ -167,7 +167,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         }
 
         /// <summary>
-        /// Redirects to the Groups view
+        /// Results the specified number of groups model.
         /// </summary>
         /// <param name="resultsModel">The results model.</param>
         /// <returns>
@@ -186,7 +186,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         }
 
         /// <summary>
-        /// Returns the Groups view
+        /// Groups this instance.
         /// </summary>
         /// <param name="numberOfGroups">The number of groups.</param>
         /// <returns>
@@ -201,7 +201,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         }
 
         /// <summary>
-        /// Updates the changed score model
+        /// Updates the specified value.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>View</returns>
@@ -216,7 +216,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         }
 
         /// <summary>
-        /// Initializes the score models if the secret code is given.
+        /// Initializes the score models for secret code.
         /// </summary>
         private void InitializeScoreModelsForSecretCode()
         {
@@ -266,7 +266,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         }
 
         /// <summary>
-        /// Groups the students based on the goal.
+        /// Groups the based on goal.
         /// </summary>
         /// <param name="goal">The goal.</param>
         private void GroupBasedOnGoal(decimal goal)
