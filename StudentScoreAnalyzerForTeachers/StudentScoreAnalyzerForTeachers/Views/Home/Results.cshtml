@@ -4,7 +4,7 @@
     this.ViewBag.Title = "Results";
 }
 
-@{ string gridHeaderString = "Goal: " + this.ViewBag.Goal; }
+@{ string gridHeaderString = "Goal: " + this.Session["Goal"]; }
 
 <h2>Score Results</h2>
 
