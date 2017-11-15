@@ -69,24 +69,7 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         [HttpPost]
         public ActionResult Index(HomePageModel numberOfStudentsModel)
         {
-            return this.RedirectToAction(
-                "ScoreInput",
-                "Home",
-                new
-                    {
-                        numberOfStudents = numberOfStudentsModel.NumberOfStudents
-                    });
-        }
-
-        /// <summary>
-        /// Scores the input.
-        /// </summary>
-        /// <param name="numberOfStudents">The number of students.</param>
-        /// <returns>
-        /// View
-        /// </returns>
-        public ActionResult ScoreInput(int numberOfStudents)
-        {
+            var numberOfStudents = numberOfStudentsModel.NumberOfStudents;
             if (numberOfStudents == Settings.SecretCode)
             {
                 this.InitializeScoreModelsForSecretCode();
@@ -96,6 +79,17 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
                 this.InitializeStudentScoreModels(numberOfStudents);
             }
 
+            return this.RedirectToAction("ScoreInput");
+        }
+
+        /// <summary>
+        /// Scores the input.
+        /// </summary>
+        /// <returns>
+        /// View
+        /// </returns>
+        public ActionResult ScoreInput()
+        {
             return this.View(new ScoreInputModel());
         }
 
@@ -135,34 +129,28 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         /// <summary>
         /// Scores the input.
         /// </summary>
-        /// <param name="sortingModel">The sorting model.</param>
+        /// <param name="scoreInputModel">The sorting model.</param>
         /// <returns>
         /// Action
         /// </returns>
         [HttpPost]
-        public ActionResult ScoreInput(ScoreInputModel sortingModel)
+        public ActionResult ScoreInput(ScoreInputModel scoreInputModel)
         {
-            return this.RedirectToAction(
-                "Results",
-                "Home",
-                new
-                    {
-                        scoreGoal = sortingModel.ScoreGoal
-                    });
+            var scoreGoal = scoreInputModel.ScoreGoal;
+            this.GroupBasedOnGoal(scoreGoal);
+            this.Session["Goal"] = scoreGoal;
+
+            return this.RedirectToAction("Results");
         }
 
         /// <summary>
         /// Results the specified scores models.
         /// </summary>
-        /// <param name="scoreGoal">The score goal.</param>
         /// <returns>
         /// View
         /// </returns>
-        public ActionResult Results(decimal scoreGoal)
+        public ActionResult Results()
         {
-            this.GroupBasedOnGoal(scoreGoal);
-            this.ViewBag.Goal = scoreGoal;
-
             return this.View(new ResultsModel());
         }
 
@@ -176,27 +164,20 @@ namespace StudentScoreAnalyzerForTeachers.Controllers
         [HttpPost]
         public ActionResult Results(ResultsModel resultsModel)
         {
-            return this.RedirectToAction(
-                "Groups",
-                "Home",
-                new
-                    {
-                        numberOfGroups = resultsModel.NumberOfGroups
-                    });
+            var numberOfGroups = resultsModel.NumberOfGroups;
+            this.CreateGroups(numberOfGroups);
+
+            return this.RedirectToAction("Groups");
         }
 
         /// <summary>
         /// Groups this instance.
         /// </summary>
-        /// <param name="numberOfGroups">The number of groups.</param>
         /// <returns>
         /// View
         /// </returns>
-        public ActionResult Groups(int numberOfGroups)
+        public ActionResult Groups()
         {
-            this.CreateGroups(numberOfGroups);
-            this.Session["NumberOfGroups"] = numberOfGroups;
-
             return this.View();
         }
 
