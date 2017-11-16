@@ -43,7 +43,9 @@
     <footer>
         <div class="container body-content">
             <hr/>
-            <p>&copy; @DateTime.Now.Year - Student Score Analyzer for Teachers</p>
+            <footer>
+                <p>&copy; @DateTime.Now.Year - Student Score Analyzer for Teachers</p>
+            </footer>
         </div>
     </footer>
 
@@ -52,3 +54,10 @@
     @(this.RenderSection("scripts", required: false))
 </body>
 </html>
+
+<style>
+    footer{
+        position:fixed;
+        bottom:0;
+    }
+</style>
