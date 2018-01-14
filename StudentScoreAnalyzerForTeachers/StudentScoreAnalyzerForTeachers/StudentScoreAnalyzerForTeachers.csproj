@@ -548,6 +548,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\ej\ej.globalize.min.js" />
     <Content Include="Scripts\ej\ej.unobtrusive.min.js" />
+    <None Include="Properties\PublishProfiles\SSAT - Web Deploy.pubxml" />
     <None Include="Scripts\ej\ej.web.all.min.intellisense.js" />
     <Content Include="Scripts\ej\ej.web.all.min.js" />
     <Content Include="Scripts\ej\ej.widget.angular.min.js" />
